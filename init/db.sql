@@ -1,0 +1,1 @@
+CREATE SCHEMA IF NOT EXISTS door2door_backend_schema AUTHORIZATION root;
