@@ -1,3 +1,4 @@
+# Prva faza: build
 FROM openjdk:17-jdk-slim as builder
 
 # Postavljamo radni direktorijum
@@ -18,11 +19,17 @@ RUN chmod +x ./gradlew
 # Koristimo cache mount za Gradle da ubrzamo build
 RUN --mount=type=cache,target=/root/.gradle ./gradlew clean build
 
+# Druga faza: runtime
 FROM openjdk:17-jdk-slim
 
+# Definišemo argument za JAR fajl
 ARG JAR_FILE=build/libs/door2door-backend.jar
-COPY ${JAR_FILE} app.jar
 
+# Kopiramo JAR fajl iz prethodne faze builda
+COPY --from=builder /app/${JAR_FILE} app.jar
+
+# Otvaramo port 8080
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+# Definišemo ENTRYPOINT
+ENTRYPOINT ["java", "-jar", "/app.jar"]

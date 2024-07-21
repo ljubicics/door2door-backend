@@ -2,7 +2,7 @@ services:
   door2door-backend:
     image: "door2door-backend"
     build:
-      context: ${BACKEND_REPO_ABSOLUTE_PATH}
+      context: .
       dockerfile: ${BACKEND_REPO_ABSOLUTE_PATH}/Dockerfile
     ports:
       - "8080:8080"

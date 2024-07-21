@@ -18,7 +18,7 @@ data class Account(
     val id: Long = 0,
     val username: String? = null,
     val password: String? = null,
-    val role: String? = null,
+    var role: String? = null,
     @OneToOne
-    val user: User? = null
+    var user: User? = null
 )
