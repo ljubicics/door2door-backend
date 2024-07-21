@@ -17,5 +17,5 @@ data class User(
     @JsonIgnore
     val email: String? = null,
     val mobileNumber: String? = null,
-    val address: String? = null
+    val address: String? = null,
 )

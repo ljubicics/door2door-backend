@@ -6,4 +6,6 @@ import rs.edu.raf.door2doorbackend.account.model.Account
 
 @Repository
 interface AccountRepository: JpaRepository<Account, Long> {
+
+    fun findAccountByUsername(username: String): Account?
 }
