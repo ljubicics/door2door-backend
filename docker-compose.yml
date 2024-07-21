@@ -1,0 +1,33 @@
+services:
+  door2door-backend:
+    image: "door2door-backend"
+    build:
+      context: .
+      dockerfile: ${BACKEND_REPO_ABSOLUTE_PATH}/Dockerfile
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    networks:
+      - door2door-network
+    depends_on:
+      - database
+
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: main_database
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    networks:
+      - door2door-network
+    volumes:
+      - ${BACKEND_REPO_ABSOLUTE_PATH}/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+networks:
+  door2door-network:
+    driver: "bridge"
+
+volumes:
+  database_data:
