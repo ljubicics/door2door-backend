@@ -32,6 +32,7 @@ class JwtUtil {
         claims["id"] = authenticationDetails.fetchId()
         claims["role"] = authenticationDetails.fetchRole()
         return Jwts.builder()
+            .subject(authenticationDetails.fetchUsername())
             .claims(claims)
             .issuedAt(Date(System.currentTimeMillis()))
             .expiration(Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))

@@ -19,26 +19,25 @@ class BootstrapData @Autowired constructor(
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
+        if (accountRepository.count().toInt() == 0) {
+            val user = User(
+                name = "Strahinja",
+                surname = "Ljubicic",
+                email = "strahinja.ljubicic@gmail.com",
+                mobileNumber = "123456789",
+                address = "Neka adresa"
+            )
 
-        println("Bootstrap data")
+            userRepository.save(user)
 
-        val user = User(
-            name = "Strahinja",
-            surname = "Ljubicic",
-            email = "strahinja.ljubicic@gmail.com",
-            mobileNumber = "123456789",
-            address = "Neka adresa"
-        )
+            val account = Account(
+                username = "admin",
+                password = passwordEncryptor.passwordEncoder().encode("admin"),
+                role = "ADMIN",
+                user = user
+            )
 
-        userRepository.save(user)
-
-        val account = Account(
-            username = "admin",
-            password = passwordEncryptor.passwordEncoder().encode("admin"),
-            role = "ADMIN",
-            user = user
-        )
-
-        accountRepository.save(account)
+            accountRepository.save(account)
+        }
     }
 }
