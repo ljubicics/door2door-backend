@@ -1,12 +1,13 @@
 package rs.edu.raf.door2doorbackend.account.dto
 
 import rs.edu.raf.door2doorbackend.auth.util.AuthenticationDetails
+import rs.edu.raf.door2doorbackend.role.model.Role
 
 data class AccountDto(
     val id: Long,
     val username: String,
     val password: String,
-    val role: String
+    val role: Role
 ) : AuthenticationDetails {
 
     override fun fetchId(): Long {
@@ -18,6 +19,6 @@ data class AccountDto(
     }
 
     override fun fetchRole(): String {
-        return role
+        return role.name.toString()
     }
 }

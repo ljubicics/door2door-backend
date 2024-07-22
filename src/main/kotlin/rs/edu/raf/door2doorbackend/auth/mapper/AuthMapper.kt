@@ -6,11 +6,14 @@ import rs.edu.raf.door2doorbackend.account.model.Account
 import rs.edu.raf.door2doorbackend.auth.dto.register.RegisterEmployeeRequest
 import rs.edu.raf.door2doorbackend.auth.dto.register.RegisterRequest
 import rs.edu.raf.door2doorbackend.auth.util.PasswordEncryptor
+import rs.edu.raf.door2doorbackend.role.model.enums.RoleName
+import rs.edu.raf.door2doorbackend.role.repository.RoleRepository
 import rs.edu.raf.door2doorbackend.user.model.User
 
 @Component
 class AuthMapper @Autowired constructor(
-    val passwordEncryptor: PasswordEncryptor
+    val passwordEncryptor: PasswordEncryptor,
+    val roleRepository: RoleRepository
 ) {
 
     fun mapRegisterEmployeeRequestToUser(registerEmployeeRequest: RegisterEmployeeRequest): User {
@@ -27,8 +30,9 @@ class AuthMapper @Autowired constructor(
         return Account(
             username = registerEmployeeRequest.username,
             password =  passwordEncryptor.passwordEncoder().encode(registerEmployeeRequest.password),
-            role = registerEmployeeRequest.role
+            role = roleRepository.findRoleByName(RoleName.ROLE_EMPLOYEE)
         )
+
     }
 
     fun mapRegisterRequestToAccount(registerRequest: RegisterRequest): Account {
