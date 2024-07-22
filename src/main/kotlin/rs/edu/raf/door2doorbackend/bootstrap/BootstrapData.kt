@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component
 import rs.edu.raf.door2doorbackend.account.model.Account
 import rs.edu.raf.door2doorbackend.account.repository.AccountRepository
 import rs.edu.raf.door2doorbackend.auth.util.PasswordEncryptor
+import rs.edu.raf.door2doorbackend.role.model.Role
+import rs.edu.raf.door2doorbackend.role.model.enums.RoleName
+import rs.edu.raf.door2doorbackend.role.repository.RoleRepository
 import rs.edu.raf.door2doorbackend.user.model.User
 import rs.edu.raf.door2doorbackend.user.repository.UserRepository
 
@@ -15,11 +18,27 @@ import rs.edu.raf.door2doorbackend.user.repository.UserRepository
 class BootstrapData @Autowired constructor(
     val accountRepository: AccountRepository,
     val userRepository: UserRepository,
+    val roleRepository: RoleRepository,
     private val passwordEncryptor: PasswordEncryptor
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
         if (accountRepository.count().toInt() == 0) {
+
+            val roleAdmin = Role(
+                name = RoleName.ROLE_ADMIN
+            )
+
+            val roleNormalUser = Role(
+                name = RoleName.ROLE_NORMAL_USER
+            )
+
+            val roleEmployee = Role(
+                name = RoleName.ROLE_EMPLOYEE
+            )
+
+            roleRepository.saveAll(listOf(roleAdmin, roleEmployee, roleNormalUser))
+
             val user = User(
                 name = "Strahinja",
                 surname = "Ljubicic",
@@ -33,7 +52,7 @@ class BootstrapData @Autowired constructor(
             val account = Account(
                 username = "admin",
                 password = passwordEncryptor.passwordEncoder().encode("admin"),
-                role = "ADMIN",
+                role = roleAdmin,
                 user = user
             )
 
