@@ -34,10 +34,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
-    implementation("org.postgresql:postgresql:42.7.3")
     implementation(kotlin("stdlib-jdk8"))
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.0")
     compileOnly("org.projectlombok:lombok")
@@ -47,16 +48,24 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
     annotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+
     testImplementation("org.testcontainers:testcontainers:1.17.6")
     testImplementation("org.testcontainers:junit-jupiter:1.17.6")
+
+    // Postgres
+    implementation("org.postgresql:postgresql:42.7.3")
     testImplementation("org.testcontainers:postgresql:1.17.6")
 
     // Mapstruct
     implementation("org.mapstruct:mapstruct:1.4.2.Final")
     kapt("org.mapstruct:mapstruct-processor:1.4.2.Final")
+
+    // Swagger
+    implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
+
+    //H2
 //    runtimeOnly("com.h2database:h2")
 }
 

@@ -1,4 +1,4 @@
-package rs.edu.raf.door2doorbackend.auth.util
+package rs.edu.raf.door2doorbackend.config
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -17,6 +17,9 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.bind.annotation.CrossOrigin
 import rs.edu.raf.door2doorbackend.account.service.AccountService
+import rs.edu.raf.door2doorbackend.auth.util.CustomDetailsService
+import rs.edu.raf.door2doorbackend.auth.util.JwtFilter
+import rs.edu.raf.door2doorbackend.auth.util.PasswordEncryptor
 
 @CrossOrigin("*")
 @Configuration
@@ -36,6 +39,7 @@ class SpringSecurityConfig @Autowired constructor(
             csrf { disable() }
             authorizeRequests {
                 authorize("/api/v1/auth/**", permitAll)
+                authorize("/swagger-ui/**", permitAll)
                 authorize(anyRequest, authenticated)
             }
             sessionManagement {
