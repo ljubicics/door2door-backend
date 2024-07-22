@@ -40,6 +40,10 @@ class SpringSecurityConfig @Autowired constructor(
             authorizeRequests {
                 authorize("/api/v1/auth/**", permitAll)
                 authorize("/swagger-ui/**", permitAll)
+                authorize("/swagger-ui.html", permitAll)
+                authorize("/v3/**", permitAll)
+                authorize("/swagger-resources/**", permitAll)
+                authorize("/swagger-resources", permitAll)
                 authorize(anyRequest, authenticated)
             }
             sessionManagement {
