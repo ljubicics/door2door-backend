@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component
 import rs.edu.raf.door2doorbackend.account.model.Account
 import rs.edu.raf.door2doorbackend.account.repository.AccountRepository
 import rs.edu.raf.door2doorbackend.auth.util.PasswordEncryptor
+import rs.edu.raf.door2doorbackend.delivery.model.Delivery
+import rs.edu.raf.door2doorbackend.delivery.repository.DeliveryRepository
 import rs.edu.raf.door2doorbackend.role.model.Role
 import rs.edu.raf.door2doorbackend.role.model.enums.RoleName
 import rs.edu.raf.door2doorbackend.role.repository.RoleRepository
@@ -19,7 +21,8 @@ class BootstrapData @Autowired constructor(
     val accountRepository: AccountRepository,
     val userRepository: UserRepository,
     val roleRepository: RoleRepository,
-    private val passwordEncryptor: PasswordEncryptor
+    private val passwordEncryptor: PasswordEncryptor,
+    private val deliveryRepository: DeliveryRepository
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
@@ -57,6 +60,16 @@ class BootstrapData @Autowired constructor(
             )
 
             accountRepository.save(account)
+
+            val delivery = Delivery(
+                timeStarted = System.currentTimeMillis(),
+                timeDelivered = System.currentTimeMillis(),
+                trackingCode = "123",
+                sender = account,
+                deliveryAgent = account
+            )
+
+            deliveryRepository.save(delivery)
         }
     }
 }

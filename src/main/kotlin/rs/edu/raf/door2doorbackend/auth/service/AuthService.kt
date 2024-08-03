@@ -16,7 +16,6 @@ class AuthService @Autowired constructor(
     val authMapper: AuthMapper,
     val accountService: AccountService,
     val userService: UserService,
-    //TODO: Remove repo and add service
     val roleRepository: RoleRepository
 ) {
 
