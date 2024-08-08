@@ -2,17 +2,47 @@ package rs.edu.raf.door2doorbackend.delivery.service
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import rs.edu.raf.door2doorbackend.account.repository.AccountRepository
 import rs.edu.raf.door2doorbackend.delivery.dto.DeliveryDto
+import rs.edu.raf.door2doorbackend.delivery.dto.StartDeliveryDto
 import rs.edu.raf.door2doorbackend.delivery.mapper.DeliveryMapper
+import rs.edu.raf.door2doorbackend.delivery.model.Delivery
+import rs.edu.raf.door2doorbackend.delivery.model.enum.DeliveryStatus
 import rs.edu.raf.door2doorbackend.delivery.repository.DeliveryRepository
 
 @Service
 class DeliveryService @Autowired constructor(
     private val deliveryRepository: DeliveryRepository,
-    private val deliveryMapper: DeliveryMapper
+    private val deliveryMapper: DeliveryMapper,
+    private val accountRepository: AccountRepository
 ) {
 
     fun getAllDeliveries(): List<DeliveryDto> {
         return deliveryRepository.findAll().stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
     }
+
+    fun startDelivery(startDeliveryDto: StartDeliveryDto) {
+        val sender = accountRepository.findById(startDeliveryDto.senderId).get()
+        val receiver = accountRepository.findAccountByUserEmail(startDeliveryDto.receiverEmail)
+            ?: throw Exception("Receiver not found")
+
+        val delivery = Delivery(
+            timeStarted = System.currentTimeMillis(),
+            status = DeliveryStatus.PENDING,
+            sender = sender,
+            receiver = receiver,
+            deliveryAgent = null,
+            pickupLocation = startDeliveryDto.pickupLocation,
+            deliveryLocation = startDeliveryDto.deliveryLocation,
+        )
+
+        deliveryRepository.save(delivery)
+        // TODO: FIND DELIVERY AGENT AND ASSIGN DELIVERY ALSO GENERATE QR CODE,
+        //  SEND AND SEND EMAIL TO RECEIVER
+    }
+
+//    fun findAllPendingDeliveriesForReceiver(receiverId: Long): List<DeliveryDto> {
+//        return deliveryRepository.findAllByReceiverIdAndStatus(receiverId, DeliveryStatus.PENDING)
+//            .stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
+//    }
 }

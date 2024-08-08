@@ -6,13 +6,13 @@ import rs.edu.raf.door2doorbackend.role.model.Role
 import rs.edu.raf.door2doorbackend.user.model.User
 
 @Entity
-data class Account(
+open class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    val username: String? = null,
+    var username: String? = null,
     @JsonIgnore
-    val password: String? = null,
+    var password: String? = null,
     @ManyToOne
     var role: Role? = null,
     @OneToOne

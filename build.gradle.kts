@@ -65,8 +65,12 @@ dependencies {
     // Swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
-    //H2
+    // Redis
+    implementation("org.springframework.boot:spring-boot-starter-data-redis:3.3.2")
+
+    // H2
 //    runtimeOnly("com.h2database:h2")
+
 }
 
 kotlin {
