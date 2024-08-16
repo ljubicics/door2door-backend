@@ -24,4 +24,10 @@ class AccountService @Autowired constructor(
     fun saveAccount(account: Account) {
         accountRepository.save(account)
     }
+
+    fun getAccountInfo(username: String): AccountDto {
+        return accountRepository.findAccountByUsername(username)?.let {
+            accountMapper.accountToAccountDto(it)
+        } ?: throw Exception("Account not found")
+    }
 }
