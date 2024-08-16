@@ -7,7 +7,7 @@ import rs.edu.raf.door2doorbackend.delivery.dto.DeliveryDto
 import rs.edu.raf.door2doorbackend.delivery.dto.StartDeliveryDto
 import rs.edu.raf.door2doorbackend.delivery.mapper.DeliveryMapper
 import rs.edu.raf.door2doorbackend.delivery.model.Delivery
-import rs.edu.raf.door2doorbackend.delivery.model.enum.DeliveryStatus
+import rs.edu.raf.door2doorbackend.delivery.model.enums.DeliveryStatus
 import rs.edu.raf.door2doorbackend.delivery.repository.DeliveryRepository
 
 @Service
@@ -21,6 +21,47 @@ class DeliveryService @Autowired constructor(
         return deliveryRepository.findAll().stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
     }
 
+    fun getAllDeliveriesForDriver(driverId: Long): List<DeliveryDto> {
+        return deliveryRepository.findAllByDriverId(driverId)
+            .stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
+    }
+
+    fun getInProgressDeliveriesForDriver(driverId: Long): DeliveryDto {
+        return deliveryMapper.deliveryToDeliveryDto(
+            deliveryRepository.findByDriverIdAndStatusIn(
+                driverId,
+                listOf(
+                    DeliveryStatus.ACCEPTED,
+                    DeliveryStatus.IN_PROGRESS
+                )
+            )
+        )
+    }
+
+    fun getAllDeliveriesForCustomer(customerId: Long): List<DeliveryDto> {
+        return deliveryRepository.findAllByReceiverIdAndStatusIn(
+            customerId,
+            listOf(
+                DeliveryStatus.DELIVERED
+            )
+        )
+            .stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
+    }
+
+    fun changeDeliveryStatus(deliveryId: Long, status: DeliveryStatus): Boolean {
+        return deliveryRepository.updateDeliveryStatus(id = deliveryId, status = status) > 0
+    }
+
+    fun getAllInProgressDeliveriesForCustomer(customerId: Long): List<DeliveryDto> {
+        return deliveryRepository.findAllByReceiverIdAndStatusIn(
+            customerId, listOf(
+                DeliveryStatus.PENDING,
+                DeliveryStatus.ACCEPTED,
+                DeliveryStatus.IN_PROGRESS
+            )
+        ).stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
+    }
+
     fun startDelivery(startDeliveryDto: StartDeliveryDto) {
         val sender = accountRepository.findById(startDeliveryDto.senderId).get()
         val receiver = accountRepository.findAccountByUserEmail(startDeliveryDto.receiverEmail)
@@ -31,7 +72,7 @@ class DeliveryService @Autowired constructor(
             status = DeliveryStatus.PENDING,
             sender = sender,
             receiver = receiver,
-            deliveryAgent = null,
+            driver = null,
             pickupLocation = startDeliveryDto.pickupLocation,
             deliveryLocation = startDeliveryDto.deliveryLocation,
         )
@@ -41,8 +82,14 @@ class DeliveryService @Autowired constructor(
         //  SEND AND SEND EMAIL TO RECEIVER
     }
 
-//    fun findAllPendingDeliveriesForReceiver(receiverId: Long): List<DeliveryDto> {
-//        return deliveryRepository.findAllByReceiverIdAndStatus(receiverId, DeliveryStatus.PENDING)
-//            .stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
-//    }
+    fun findAllPendingDeliveriesForReceiver(receiverId: Long): List<DeliveryDto> {
+        return deliveryRepository.findAllByReceiverIdAndStatusIn(
+            receiverId = receiverId,
+            status = listOf(
+                DeliveryStatus.PENDING,
+                DeliveryStatus.ACCEPTED,
+                DeliveryStatus.IN_PROGRESS
+            )
+        ).stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
+    }
 }

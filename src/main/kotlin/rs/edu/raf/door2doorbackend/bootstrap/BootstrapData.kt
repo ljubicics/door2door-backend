@@ -9,7 +9,7 @@ import rs.edu.raf.door2doorbackend.account.model.DeliveryAccount
 import rs.edu.raf.door2doorbackend.account.repository.AccountRepository
 import rs.edu.raf.door2doorbackend.auth.util.PasswordEncryptor
 import rs.edu.raf.door2doorbackend.delivery.model.Delivery
-import rs.edu.raf.door2doorbackend.delivery.model.enum.DeliveryStatus
+import rs.edu.raf.door2doorbackend.delivery.model.enums.DeliveryStatus
 import rs.edu.raf.door2doorbackend.delivery.repository.DeliveryRepository
 import rs.edu.raf.door2doorbackend.role.model.Role
 import rs.edu.raf.door2doorbackend.role.model.enums.RoleName
@@ -36,7 +36,7 @@ class BootstrapData @Autowired constructor(
             )
 
             val roleNormalUser = Role(
-                name = RoleName.ROLE_NORMAL_USER
+                name = RoleName.ROLE_CUSTOMER
             )
 
             val roleEmployee = Role(
@@ -106,15 +106,54 @@ class BootstrapData @Autowired constructor(
                 timeDelivered = System.currentTimeMillis(),
                 trackingCode = "123",
                 price = BigDecimal.valueOf(100),
-                status = DeliveryStatus.IN_PROGRESS,
+                status = DeliveryStatus.ACCEPTED,
+                pickupLocation = "Bratstva i jedinstva 30",
+                deliveryLocation = "Banatska 23 Borca",
+                sender = adminAccount,
+                receiver = normalAccount,
+                driver = deliveryAccount
+            )
+
+            val finishedDelivery1 = Delivery(
+                timeStarted = System.currentTimeMillis(),
+                timeDelivered = System.currentTimeMillis(),
+                trackingCode = "123",
+                price = BigDecimal.valueOf(100),
+                status = DeliveryStatus.DELIVERED,
                 pickupLocation = "Bratstva i jedinstva 30",
                 deliveryLocation = "Banatska 23",
                 sender = adminAccount,
-                receiver = adminAccount,
-                deliveryAgent = deliveryAccount
+                receiver = normalAccount,
+                driver = deliveryAccount
             )
 
-            deliveryRepository.save(delivery)
+            val finishedDelivery2 = Delivery(
+                timeStarted = System.currentTimeMillis(),
+                timeDelivered = System.currentTimeMillis(),
+                trackingCode = "123",
+                price = BigDecimal.valueOf(100),
+                status = DeliveryStatus.DELIVERED,
+                pickupLocation = "Bratstva i jedinstva 30",
+                deliveryLocation = "Banatska 23",
+                sender = adminAccount,
+                receiver = normalAccount,
+                driver = deliveryAccount
+            )
+
+            val finishedDelivery3 = Delivery(
+                timeStarted = System.currentTimeMillis(),
+                timeDelivered = System.currentTimeMillis(),
+                trackingCode = "123",
+                price = BigDecimal.valueOf(100),
+                status = DeliveryStatus.DELIVERED,
+                pickupLocation = "Bratstva i jedinstva 30",
+                deliveryLocation = "Banatska 23",
+                sender = adminAccount,
+                receiver = normalAccount,
+                driver = deliveryAccount
+            )
+
+            deliveryRepository.saveAll(listOf(delivery, finishedDelivery1, finishedDelivery2, finishedDelivery3))
         }
     }
 }

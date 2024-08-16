@@ -3,7 +3,7 @@ package rs.edu.raf.door2doorbackend.delivery.model
 import jakarta.persistence.*
 import rs.edu.raf.door2doorbackend.account.model.Account
 import rs.edu.raf.door2doorbackend.account.model.DeliveryAccount
-import rs.edu.raf.door2doorbackend.delivery.model.enum.DeliveryStatus
+import rs.edu.raf.door2doorbackend.delivery.model.enums.DeliveryStatus
 import java.math.BigDecimal
 
 @Entity
@@ -27,5 +27,5 @@ data class Delivery(
     @ManyToOne
     val receiver: Account,
     @ManyToOne
-    val deliveryAgent: DeliveryAccount?
+    val driver: DeliveryAccount?
 )

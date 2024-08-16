@@ -29,7 +29,7 @@ class AuthService @Autowired constructor(
         val user = authMapper.mapRegisterRequestToUser(registerRequest)
         val account = authMapper.mapRegisterRequestToAccount(registerRequest)
         account.user = user
-        account.role = roleRepository.findRoleByName(RoleName.ROLE_NORMAL_USER)
+        account.role = roleRepository.findRoleByName(RoleName.ROLE_CUSTOMER)
 
         userService.saveUser(user)
         accountService.saveAccount(account)
