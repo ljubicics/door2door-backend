@@ -25,9 +25,19 @@ services:
     ports:
       - "5432:5432"
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - door2door-network
+    volumes:
+      - redis_data:/data
+
 networks:
   door2door-network:
     driver: "bridge"
 
 volumes:
   database_data:
+  redis_data:

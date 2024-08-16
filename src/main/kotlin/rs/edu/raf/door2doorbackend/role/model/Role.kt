@@ -6,7 +6,7 @@ import rs.edu.raf.door2doorbackend.role.model.enums.RoleName
 import java.io.Serializable
 
 @Entity
-data class Role(
+class Role(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
