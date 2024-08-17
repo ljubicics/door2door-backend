@@ -11,6 +11,7 @@ import rs.edu.raf.door2doorbackend.auth.util.PasswordEncryptor
 import rs.edu.raf.door2doorbackend.delivery.model.Delivery
 import rs.edu.raf.door2doorbackend.delivery.model.enums.DeliveryStatus
 import rs.edu.raf.door2doorbackend.delivery.repository.DeliveryRepository
+import rs.edu.raf.door2doorbackend.delivery.util.TrackingCodeGenerator
 import rs.edu.raf.door2doorbackend.role.model.Role
 import rs.edu.raf.door2doorbackend.role.model.enums.RoleName
 import rs.edu.raf.door2doorbackend.role.repository.RoleRepository
@@ -104,7 +105,7 @@ class BootstrapData @Autowired constructor(
             val delivery = Delivery(
                 timeStarted = System.currentTimeMillis(),
                 timeDelivered = System.currentTimeMillis(),
-                trackingCode = "123",
+                trackingCode = TrackingCodeGenerator.generateTrackingCode(),
                 price = BigDecimal.valueOf(100),
                 status = DeliveryStatus.ACCEPTED,
                 pickupLocation = "Bratstva i jedinstva 30",
@@ -117,7 +118,7 @@ class BootstrapData @Autowired constructor(
             val finishedDelivery1 = Delivery(
                 timeStarted = System.currentTimeMillis(),
                 timeDelivered = System.currentTimeMillis(),
-                trackingCode = "123",
+                trackingCode = TrackingCodeGenerator.generateTrackingCode(),
                 price = BigDecimal.valueOf(100),
                 status = DeliveryStatus.DELIVERED,
                 pickupLocation = "Bratstva i jedinstva 30",
@@ -130,7 +131,7 @@ class BootstrapData @Autowired constructor(
             val finishedDelivery2 = Delivery(
                 timeStarted = System.currentTimeMillis(),
                 timeDelivered = System.currentTimeMillis(),
-                trackingCode = "123",
+                trackingCode = TrackingCodeGenerator.generateTrackingCode(),
                 price = BigDecimal.valueOf(100),
                 status = DeliveryStatus.DELIVERED,
                 pickupLocation = "Bratstva i jedinstva 30",
@@ -143,7 +144,7 @@ class BootstrapData @Autowired constructor(
             val finishedDelivery3 = Delivery(
                 timeStarted = System.currentTimeMillis(),
                 timeDelivered = System.currentTimeMillis(),
-                trackingCode = "123",
+                trackingCode = TrackingCodeGenerator.generateTrackingCode(),
                 price = BigDecimal.valueOf(100),
                 status = DeliveryStatus.DELIVERED,
                 pickupLocation = "Bratstva i jedinstva 30",

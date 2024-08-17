@@ -89,4 +89,33 @@ class DeliveryController @Autowired constructor(
             ResponseEntity.status(500).build()
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping(path = ["/info"], produces = ["application/json"])
+    fun getDeliveryInfo(@RequestParam("id") id: Long): ResponseEntity<Any> {
+        return try {
+            ResponseEntity.ok().body(deliveryService.findDeliveryById(deliveryId = id))
+        } catch (e: Exception) {
+            ResponseEntity.status(500).build()
+        }
+    }
+
+    @PreAuthorize("hasRole('ROLE_DELIVERY')")
+    @GetMapping(path = ["/confirm"], produces = ["application/json"])
+    fun confirmDelivery(
+        @RequestParam("id") id: Long,
+        @RequestParam("code") trackingCode: String,
+        @RequestParam("receiverId") receiverId: Long
+    ): ResponseEntity<Any> {
+        return try {
+            deliveryService.confirmDelivery(
+                deliveryId = id,
+                trackingCode = trackingCode,
+                receiverId = receiverId
+            )
+            ResponseEntity.ok().build()
+        } catch (e: Exception) {
+            ResponseEntity.status(500).build()
+        }
+    }
 }

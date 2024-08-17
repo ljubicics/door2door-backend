@@ -9,6 +9,7 @@ import rs.edu.raf.door2doorbackend.delivery.mapper.DeliveryMapper
 import rs.edu.raf.door2doorbackend.delivery.model.Delivery
 import rs.edu.raf.door2doorbackend.delivery.model.enums.DeliveryStatus
 import rs.edu.raf.door2doorbackend.delivery.repository.DeliveryRepository
+import rs.edu.raf.door2doorbackend.delivery.util.TrackingCodeGenerator
 
 @Service
 class DeliveryService @Autowired constructor(
@@ -22,15 +23,19 @@ class DeliveryService @Autowired constructor(
     }
 
     fun getAllDeliveriesForDriver(driverId: Long): List<DeliveryDto> {
-        return deliveryRepository.findAllByDriverId(driverId)
-            .stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
+        return deliveryRepository.findAllByDriverIdAndStatusIn(
+            driverId = driverId,
+            status = listOf(
+                DeliveryStatus.DELIVERED
+            )
+        ).stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
     }
 
     fun getInProgressDeliveriesForDriver(driverId: Long): DeliveryDto {
         return deliveryMapper.deliveryToDeliveryDto(
             deliveryRepository.findByDriverIdAndStatusIn(
-                driverId,
-                listOf(
+                driverId = driverId,
+                status = listOf(
                     DeliveryStatus.ACCEPTED,
                     DeliveryStatus.IN_PROGRESS
                 )
@@ -40,8 +45,8 @@ class DeliveryService @Autowired constructor(
 
     fun getAllDeliveriesForCustomer(customerId: Long): List<DeliveryDto> {
         return deliveryRepository.findAllByReceiverIdAndStatusIn(
-            customerId,
-            listOf(
+            receiverId = customerId,
+            status = listOf(
                 DeliveryStatus.DELIVERED
             )
         )
@@ -54,7 +59,8 @@ class DeliveryService @Autowired constructor(
 
     fun getAllInProgressDeliveriesForCustomer(customerId: Long): List<DeliveryDto> {
         return deliveryRepository.findAllByReceiverIdAndStatusIn(
-            customerId, listOf(
+            receiverId = customerId,
+            status = listOf(
                 DeliveryStatus.PENDING,
                 DeliveryStatus.ACCEPTED,
                 DeliveryStatus.IN_PROGRESS
@@ -72,14 +78,14 @@ class DeliveryService @Autowired constructor(
             status = DeliveryStatus.PENDING,
             sender = sender,
             receiver = receiver,
+            trackingCode = TrackingCodeGenerator.generateTrackingCode(),
             driver = null,
             pickupLocation = startDeliveryDto.pickupLocation,
             deliveryLocation = startDeliveryDto.deliveryLocation,
         )
 
         deliveryRepository.save(delivery)
-        // TODO: FIND DELIVERY AGENT AND ASSIGN DELIVERY ALSO GENERATE QR CODE,
-        //  SEND AND SEND EMAIL TO RECEIVER
+        // TODO: FIND DELIVERY AGENT AND ASSIGN DELIVERY
     }
 
     fun findAllPendingDeliveriesForReceiver(receiverId: Long): List<DeliveryDto> {
@@ -91,5 +97,20 @@ class DeliveryService @Autowired constructor(
                 DeliveryStatus.IN_PROGRESS
             )
         ).stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
+    }
+
+    fun findDeliveryById(deliveryId: Long): DeliveryDto {
+        return deliveryMapper.deliveryToDeliveryDto(deliveryRepository.findById(deliveryId).get())
+    }
+
+    fun confirmDelivery(deliveryId: Long, trackingCode: String, receiverId: Long) {
+        val delivery = deliveryRepository.findById(deliveryId).get()
+        if (delivery.trackingCode == trackingCode && delivery.receiver.id == receiverId) {
+            delivery.status = DeliveryStatus.DELIVERED
+            delivery.timeDelivered = System.currentTimeMillis()
+            deliveryRepository.save(delivery)
+        } else {
+            throw Exception("Invalid tracking code")
+        }
     }
 }

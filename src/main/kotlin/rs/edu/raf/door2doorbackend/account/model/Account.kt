@@ -9,12 +9,12 @@ import rs.edu.raf.door2doorbackend.user.model.User
 open class Account(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
-    var username: String? = null,
+    open val id: Long = 0,
+    open var username: String? = null,
     @JsonIgnore
-    var password: String? = null,
+    open var password: String? = null,
     @ManyToOne
-    var role: Role? = null,
+    open var role: Role? = null,
     @OneToOne
-    var user: User? = null
+    open var user: User? = null
 )
