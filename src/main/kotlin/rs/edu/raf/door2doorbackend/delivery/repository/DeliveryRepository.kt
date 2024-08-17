@@ -11,8 +11,7 @@ import rs.edu.raf.door2doorbackend.delivery.model.enums.DeliveryStatus
 
 @Repository
 interface DeliveryRepository: JpaRepository<Delivery, Long> {
-    fun findAllByDriverId(driverId: Long): List<Delivery>
-    fun findAllByReceiverId(receiverId: Long): List<Delivery>
+    fun findAllByDriverIdAndStatusIn(driverId: Long, status: List<DeliveryStatus>): List<Delivery>
     fun findByDriverIdAndStatusIn(driverId: Long, status: List<DeliveryStatus>): Delivery
     fun findAllByReceiverIdAndStatusIn(receiverId: Long, status: List<DeliveryStatus>): List<Delivery>
 

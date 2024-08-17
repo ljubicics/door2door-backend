@@ -12,11 +12,11 @@ data class Delivery(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     val timeStarted: Long = 0,
-    val timeDelivered: Long = 0,
+    var timeDelivered: Long = 0,
     val trackingCode: String? = null,
     val price: BigDecimal = BigDecimal.ZERO,
     @Enumerated(EnumType.STRING)
-    val status: DeliveryStatus? = null,
+    var status: DeliveryStatus? = null,
     val qrConfirmed: Boolean = false,
     // TODO: Sender bi trebalo da bude lokacija gde dostavljac da pokupi
     //  paket, tu lokaciju unosi operater preko web-a
