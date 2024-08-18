@@ -88,17 +88,6 @@ class DeliveryService @Autowired constructor(
         // TODO: FIND DELIVERY AGENT AND ASSIGN DELIVERY
     }
 
-    fun findAllPendingDeliveriesForReceiver(receiverId: Long): List<DeliveryDto> {
-        return deliveryRepository.findAllByReceiverIdAndStatusIn(
-            receiverId = receiverId,
-            status = listOf(
-                DeliveryStatus.PENDING,
-                DeliveryStatus.ACCEPTED,
-                DeliveryStatus.IN_PROGRESS
-            )
-        ).stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
-    }
-
     fun findDeliveryById(deliveryId: Long): DeliveryDto {
         return deliveryMapper.deliveryToDeliveryDto(deliveryRepository.findById(deliveryId).get())
     }

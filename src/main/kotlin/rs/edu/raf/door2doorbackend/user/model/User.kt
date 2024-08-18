@@ -18,4 +18,6 @@ class User(
     val email: String? = null,
     val mobileNumber: String? = null,
     val address: String? = null,
+    val timeCreated: Long? = null,
+    val totalDeliveries: Int? = null,
 )
