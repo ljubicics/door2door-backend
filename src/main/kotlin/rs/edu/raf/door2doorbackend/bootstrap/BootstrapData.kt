@@ -55,7 +55,9 @@ class BootstrapData @Autowired constructor(
                 surname = "Ljubicic",
                 email = "strahinja.ljubicic@gmail.com",
                 mobileNumber = "123456789",
-                address = "Neka adresa"
+                address = "Neka adresa",
+                timeCreated = System.currentTimeMillis(),
+                totalDeliveries = 3
             )
 
             val normalUser = User(
@@ -63,7 +65,9 @@ class BootstrapData @Autowired constructor(
                 surname = "Ljubicic",
                 email = "strahinja.ljubicic@gmail.com",
                 mobileNumber = "123456789",
-                address = "Banatska 23"
+                address = "Banatska 23",
+                timeCreated = System.currentTimeMillis(),
+                totalDeliveries = 3
             )
 
             val deliveryUser = User(
@@ -71,7 +75,9 @@ class BootstrapData @Autowired constructor(
                 surname = "Sekulic",
                 email = "strandza007@gmail.com",
                 mobileNumber = "123456789",
-                address = "Trg Republike 1"
+                address = "Trg Republike 1",
+                timeCreated = System.currentTimeMillis(),
+                totalDeliveries = 3
             )
 
             userRepository.saveAll(listOf(adminUser, normalUser, deliveryUser))
