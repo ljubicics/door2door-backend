@@ -3,9 +3,11 @@ package rs.edu.raf.door2doorbackend.user.model
 import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import lombok.NonNull
+import org.springframework.data.redis.core.RedisHash
 
 @Entity
 @Table(name = "users")
+@RedisHash("User")
 class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

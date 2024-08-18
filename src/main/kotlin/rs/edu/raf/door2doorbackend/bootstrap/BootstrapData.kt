@@ -121,6 +121,19 @@ class BootstrapData @Autowired constructor(
                 driver = deliveryAccount
             )
 
+            val noDriverDelivery = Delivery(
+                timeStarted = System.currentTimeMillis(),
+                timeDelivered = System.currentTimeMillis(),
+                trackingCode = TrackingCodeGenerator.generateTrackingCode(),
+                price = BigDecimal.valueOf(100),
+                status = DeliveryStatus.PENDING,
+                pickupLocation = "Bratstva i jedinstva 30",
+                deliveryLocation = "Banatska 23 Borca",
+                sender = adminAccount,
+                receiver = normalAccount,
+                driver = null
+            )
+
             val finishedDelivery1 = Delivery(
                 timeStarted = System.currentTimeMillis(),
                 timeDelivered = System.currentTimeMillis(),
@@ -160,7 +173,15 @@ class BootstrapData @Autowired constructor(
                 driver = deliveryAccount
             )
 
-            deliveryRepository.saveAll(listOf(delivery, finishedDelivery1, finishedDelivery2, finishedDelivery3))
+            deliveryRepository.saveAll(
+                listOf(
+                    delivery,
+                    noDriverDelivery,
+                    finishedDelivery1,
+                    finishedDelivery2,
+                    finishedDelivery3
+                )
+            )
         }
     }
 }

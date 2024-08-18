@@ -55,8 +55,8 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter:1.17.6")
 
     // Postgres
-//    implementation("org.postgresql:postgresql:42.7.3")
-//    testImplementation("org.testcontainers:postgresql:1.17.6")
+    implementation("org.postgresql:postgresql:42.7.3")
+    testImplementation("org.testcontainers:postgresql:1.17.6")
 
     // Mapstruct
     implementation("org.mapstruct:mapstruct:1.4.2.Final")
@@ -66,10 +66,10 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
     // Redis
-//    implementation("org.springframework.boot:spring-boot-starter-data-redis:3.3.2")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis:3.3.2")
 
     // H2
-    runtimeOnly("com.h2database:h2")
+//    runtimeOnly("com.h2database:h2")
 
 }
 

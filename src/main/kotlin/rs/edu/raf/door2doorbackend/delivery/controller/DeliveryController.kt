@@ -118,4 +118,18 @@ class DeliveryController @Autowired constructor(
             ResponseEntity.status(500).build()
         }
     }
+
+    @PreAuthorize("hasRole('ROLE_DELIVERY')")
+    @GetMapping(path = ["/acceptDelivery"], produces = ["application/json"])
+    fun acceptDelivery(
+        @RequestParam("deliveryId") id: Long,
+        @RequestParam("driverId") driverId: Long
+    ): ResponseEntity<Any> {
+        return try {
+            deliveryService.acceptDelivery(deliveryId = id, driverId = driverId)
+            ResponseEntity.ok().build()
+        } catch (e: Exception) {
+            ResponseEntity.status(500).build()
+        }
+    }
 }

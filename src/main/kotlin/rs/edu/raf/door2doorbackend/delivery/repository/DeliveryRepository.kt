@@ -1,7 +1,9 @@
 package rs.edu.raf.door2doorbackend.delivery.repository
 
+import jakarta.persistence.LockModeType
 import jakarta.transaction.Transactional
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Lock
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
@@ -19,4 +21,8 @@ interface DeliveryRepository: JpaRepository<Delivery, Long> {
     @Transactional
     @Query("UPDATE Delivery d SET d.status = :status WHERE d.id = :id")
     fun updateDeliveryStatus(id: Long?, status: DeliveryStatus?): Int
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT d FROM Delivery d WHERE d.id = :id")
+    fun findByIdAndLock(id: Long): Delivery
 }
