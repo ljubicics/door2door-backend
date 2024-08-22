@@ -17,7 +17,7 @@ data class Delivery(
     val price: BigDecimal = BigDecimal.ZERO,
     @Enumerated(EnumType.STRING)
     var status: DeliveryStatus? = null,
-    val qrConfirmed: Boolean = false,
+    var qrConfirmed: Boolean = false,
     val pickupLocation: String,
     val deliveryLocation: String,
     @ManyToOne

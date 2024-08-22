@@ -2,9 +2,13 @@ package rs.edu.raf.door2doorbackend.delivery.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
+import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.handler.annotation.SendTo
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import rs.edu.raf.door2doorbackend.delivery.dto.StartDeliveryDto
+import rs.edu.raf.door2doorbackend.delivery.model.Delivery
 import rs.edu.raf.door2doorbackend.delivery.model.enums.DeliveryStatus
 import rs.edu.raf.door2doorbackend.delivery.service.DeliveryService
 
@@ -56,6 +60,7 @@ class DeliveryController @Autowired constructor(
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_EMPLOYEE')")
     @PostMapping(path = ["/start"], produces = ["application/json"], consumes = ["application/json"])
     fun startDelivery(@RequestBody startDeliveryDto: StartDeliveryDto): ResponseEntity<Any> {
         return try {
@@ -132,4 +137,11 @@ class DeliveryController @Autowired constructor(
             ResponseEntity.status(500).build()
         }
     }
+
+    @MessageMapping("/newDelivery")
+    @SendTo("/topic/deliveries")
+    fun newDelivery(delivery: Delivery): Delivery {
+        return delivery
+    }
+
 }

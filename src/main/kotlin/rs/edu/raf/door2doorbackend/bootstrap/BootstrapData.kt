@@ -53,7 +53,7 @@ class BootstrapData @Autowired constructor(
             val adminUser = User(
                 name = "Strahinja",
                 surname = "Ljubicic",
-                email = "strahinja.ljubicic@gmail.com",
+                email = "strahinjaljubicic@gmail.com",
                 mobileNumber = "123456789",
                 address = "Neka adresa",
                 timeCreated = System.currentTimeMillis(),
@@ -80,7 +80,16 @@ class BootstrapData @Autowired constructor(
                 totalDeliveries = 3
             )
 
-            userRepository.saveAll(listOf(adminUser, normalUser, deliveryUser))
+            val employeeUser = User(
+                name = "Employee",
+                surname = "Employee",
+                email = "employee@door2doo2.com",
+                mobileNumber = "123456789",
+                address = "Trg Republike 3",
+                timeCreated = System.currentTimeMillis(),
+            )
+
+            userRepository.saveAll(listOf(adminUser, normalUser, deliveryUser, employeeUser))
 
             val adminAccount = Account(
                 username = "admin",
@@ -96,6 +105,13 @@ class BootstrapData @Autowired constructor(
                 user = normalUser
             )
 
+            val employeeAccount = Account(
+                username = "employee",
+                password = passwordEncryptor.passwordEncoder().encode("employee"),
+                role = roleEmployee,
+                user = employeeUser
+            )
+
             val deliveryAccount = DeliveryAccount()
             deliveryAccount.username = "delivery"
             deliveryAccount.password = passwordEncryptor.passwordEncoder().encode("delivery")
@@ -106,7 +122,7 @@ class BootstrapData @Autowired constructor(
             deliveryAccount.earnings = BigDecimal.valueOf(100)
             deliveryAccount.rating = 5.0
 
-            accountRepository.saveAll(listOf(adminAccount, normalAccount, deliveryAccount))
+            accountRepository.saveAll(listOf(adminAccount, normalAccount, deliveryAccount, employeeAccount))
 
             val delivery = Delivery(
                 timeStarted = System.currentTimeMillis(),

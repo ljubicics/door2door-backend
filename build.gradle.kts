@@ -71,6 +71,9 @@ dependencies {
     // H2
 //    runtimeOnly("com.h2database:h2")
 
+    // Websockets
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
+
 }
 
 kotlin {

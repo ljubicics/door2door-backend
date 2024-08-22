@@ -3,6 +3,7 @@ package rs.edu.raf.door2doorbackend.delivery.service
 import jakarta.persistence.OptimisticLockException
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Service
 import rs.edu.raf.door2doorbackend.account.model.DeliveryAccount
 import rs.edu.raf.door2doorbackend.account.repository.AccountRepository
@@ -13,6 +14,7 @@ import rs.edu.raf.door2doorbackend.delivery.model.Delivery
 import rs.edu.raf.door2doorbackend.delivery.model.enums.DeliveryStatus
 import rs.edu.raf.door2doorbackend.delivery.repository.DeliveryRepository
 import rs.edu.raf.door2doorbackend.delivery.util.TrackingCodeGenerator
+import rs.edu.raf.door2doorbackend.websocket.DeliveryWebSocketHandler
 
 @Service
 class DeliveryService @Autowired constructor(
@@ -20,6 +22,7 @@ class DeliveryService @Autowired constructor(
     private val deliveryMapper: DeliveryMapper,
     private val accountRepository: AccountRepository,
     private val deliveryDriverService: DeliveryDriverService,
+    private val deliveryWebSocketHandler: DeliveryWebSocketHandler
 ) {
 
     fun getAllDeliveries(): List<DeliveryDto> {
@@ -72,16 +75,21 @@ class DeliveryService @Autowired constructor(
         ).stream().map { deliveryMapper.deliveryToDeliveryDto(it) }.toList()
     }
 
+    @Transactional
     fun startDelivery(startDeliveryDto: StartDeliveryDto) {
         val sender = accountRepository.findById(startDeliveryDto.senderId).get()
         val receiver = accountRepository.findAccountByUserEmail(startDeliveryDto.receiverEmail)
             ?: throw Exception("Receiver not found")
+        println("PRONASAO POSILJAOCA I PRIMAOCA")
 
         val availableDrivers = findAvailableDriver()
 
         if (availableDrivers.isEmpty()) {
             throw Exception("No available drivers")
+            println("No available drivers")
         }
+
+        println("IMA SLOBODNIH VOZACA")
 
         val delivery = Delivery(
             timeStarted = System.currentTimeMillis(),
@@ -94,8 +102,13 @@ class DeliveryService @Autowired constructor(
             deliveryLocation = startDeliveryDto.deliveryLocation,
         )
 
+        println("NAPRAVIO DOSTAVU")
+
         deliveryRepository.save(delivery)
-        // TODO: FIND DELIVERY AGENT AND ASSIGN DELIVERY
+
+        println("SACUVAO DOSTAVU")
+        notifyNewDelivery(delivery = delivery)
+        println("OBAVESTIO VOZACE")
     }
 
     fun findDeliveryById(deliveryId: Long): DeliveryDto {
@@ -125,10 +138,12 @@ class DeliveryService @Autowired constructor(
         }
     }
 
+    @Transactional
     fun confirmDelivery(deliveryId: Long, trackingCode: String, receiverId: Long) {
         val delivery = deliveryRepository.findByIdAndLock(deliveryId)
         if (delivery.trackingCode == trackingCode && delivery.receiver.id == receiverId) {
             delivery.status = DeliveryStatus.DELIVERED
+            delivery.qrConfirmed = true
             delivery.timeDelivered = System.currentTimeMillis()
             deliveryRepository.save(delivery)
 
@@ -139,10 +154,12 @@ class DeliveryService @Autowired constructor(
     }
 
     private fun findAvailableDriver(): List<DeliveryAccount> {
-        // Ovde implementiraj logiku za pronalaženje slobodnog dostavljača
-        // Na primer, pretraga po Redis-u za slobodnog dostavljača
         val allDrivers = accountRepository.findAllDeliveryAccounts()
         return allDrivers.filter { deliveryDriverService.isDelivererBusy(it.id.toString()).not() }
     }
 
+    private fun notifyNewDelivery(delivery: Delivery) {
+        println("SLANJE PORUKE KLIJENTU")
+        deliveryWebSocketHandler.notifyAllClients(delivery)
+    }
 }
