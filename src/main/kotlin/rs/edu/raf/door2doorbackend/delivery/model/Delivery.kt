@@ -17,9 +17,7 @@ data class Delivery(
     val price: BigDecimal = BigDecimal.ZERO,
     @Enumerated(EnumType.STRING)
     var status: DeliveryStatus? = null,
-    val qrConfirmed: Boolean = false,
-    // TODO: Sender bi trebalo da bude lokacija gde dostavljac da pokupi
-    //  paket, tu lokaciju unosi operater preko web-a
+    var qrConfirmed: Boolean = false,
     val pickupLocation: String,
     val deliveryLocation: String,
     @ManyToOne
@@ -27,5 +25,5 @@ data class Delivery(
     @ManyToOne
     val receiver: Account,
     @ManyToOne
-    val driver: DeliveryAccount?
+    var driver: DeliveryAccount?
 )
