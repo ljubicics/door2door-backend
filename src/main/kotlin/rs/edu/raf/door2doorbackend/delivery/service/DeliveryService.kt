@@ -3,7 +3,6 @@ package rs.edu.raf.door2doorbackend.delivery.service
 import jakarta.persistence.OptimisticLockException
 import jakarta.transaction.Transactional
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Service
 import rs.edu.raf.door2doorbackend.account.model.DeliveryAccount
 import rs.edu.raf.door2doorbackend.account.repository.AccountRepository
@@ -77,7 +76,8 @@ class DeliveryService @Autowired constructor(
 
     @Transactional
     fun startDelivery(startDeliveryDto: StartDeliveryDto) {
-        val sender = accountRepository.findById(startDeliveryDto.senderId).get()
+        val sender = accountRepository.findAccountByUserEmail(startDeliveryDto.senderEmail)
+            ?: throw Exception("Sender not found")
         val receiver = accountRepository.findAccountByUserEmail(startDeliveryDto.receiverEmail)
             ?: throw Exception("Receiver not found")
         println("PRONASAO POSILJAOCA I PRIMAOCA")
