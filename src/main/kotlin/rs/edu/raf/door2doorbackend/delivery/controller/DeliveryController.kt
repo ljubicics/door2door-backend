@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
-import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import rs.edu.raf.door2doorbackend.delivery.dto.StartDeliveryDto
@@ -67,7 +66,7 @@ class DeliveryController @Autowired constructor(
             deliveryService.startDelivery(startDeliveryDto = startDeliveryDto)
             ResponseEntity.ok().build()
         } catch (e: Exception) {
-            ResponseEntity.status(500).build()
+            ResponseEntity.status(500).body(e.message)
         }
     }
 
