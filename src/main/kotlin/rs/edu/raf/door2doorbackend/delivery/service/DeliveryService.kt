@@ -141,13 +141,19 @@ class DeliveryService @Autowired constructor(
     @Transactional
     fun confirmDelivery(deliveryId: Long, trackingCode: String, receiverId: Long) {
         val delivery = deliveryRepository.findByIdAndLock(deliveryId)
+        val deliveryDriver = delivery.driver ?: throw Exception("Delivery not assigned to driver")
+        val deliveryReceiver = delivery.receiver ?: throw Exception("Delivery not assigned to receiver")
         if (delivery.trackingCode == trackingCode && delivery.receiver.id == receiverId) {
             delivery.status = DeliveryStatus.DELIVERED
             delivery.qrConfirmed = true
             delivery.timeDelivered = System.currentTimeMillis()
             deliveryRepository.save(delivery)
+            deliveryDriver.numberOfDeliveries += 1
+            deliveryReceiver.numberOfDeliveries += 1
 
             deliveryDriverService.markDelivererAsAvailable(delivery.driver?.id.toString())
+            accountRepository.save(deliveryDriver)
+            accountRepository.save(deliveryReceiver)
         } else {
             throw Exception("Invalid tracking code")
         }

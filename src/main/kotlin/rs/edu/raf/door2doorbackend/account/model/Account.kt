@@ -16,5 +16,6 @@ open class Account(
     @ManyToOne
     open var role: Role? = null,
     @OneToOne
-    open var user: User? = null
+    open var user: User? = null,
+    open var numberOfDeliveries: Int = 0,
 )

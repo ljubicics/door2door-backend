@@ -7,7 +7,8 @@ data class AccountDto(
     val id: Long,
     val username: String,
     val password: String,
-    val role: Role
+    val role: Role,
+    val numberOfDeliveries: Int
 ) : AuthenticationDetails {
 
     override fun fetchId(): Long {
