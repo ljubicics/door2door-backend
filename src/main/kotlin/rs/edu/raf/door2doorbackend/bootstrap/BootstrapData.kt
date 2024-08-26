@@ -57,7 +57,6 @@ class BootstrapData @Autowired constructor(
                 mobileNumber = "123456789",
                 address = "Neka adresa",
                 timeCreated = System.currentTimeMillis(),
-                totalDeliveries = 3
             )
 
             val normalUser = User(
@@ -67,7 +66,6 @@ class BootstrapData @Autowired constructor(
                 mobileNumber = "123456789",
                 address = "Banatska 23",
                 timeCreated = System.currentTimeMillis(),
-                totalDeliveries = 3
             )
 
             val deliveryUser = User(
@@ -77,7 +75,6 @@ class BootstrapData @Autowired constructor(
                 mobileNumber = "123456789",
                 address = "Trg Republike 1",
                 timeCreated = System.currentTimeMillis(),
-                totalDeliveries = 3
             )
 
             val employeeUser = User(
