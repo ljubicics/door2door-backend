@@ -34,6 +34,17 @@ services:
     volumes:
       - redis_data:/data
 
+  angular-frontend:
+    build:
+      context: ${FRONTEND_REPO_ABSOLUTE_PATH}/
+      dockerfile: ${FRONTEND_REPO_ABSOLUTE_PATH}/Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - door2door-network
+    depends_on:
+      - door2door-backend
+
 networks:
   door2door-network:
     driver: "bridge"
