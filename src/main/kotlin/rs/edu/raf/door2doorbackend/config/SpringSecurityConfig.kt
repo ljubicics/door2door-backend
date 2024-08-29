@@ -35,7 +35,7 @@ class SpringSecurityConfig @Autowired constructor(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
-            cors { disable() }
+            cors { }
             csrf { disable() }
             authorizeRequests {
                 authorize("/api/v1/auth/**", permitAll)
